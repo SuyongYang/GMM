@@ -1,0 +1,18 @@
+Package: hayashir
+Title: R Companion to "Econometrics" by Fumio Hayashi
+Version: 0.1.0.9090
+Authors@R: person("Lachlan", "Deer", email = "lachlan.deer@gmail.com", role = c("aut", "cre"))
+Maintainer: Lachlan Deer <lachlan.deer@gmail.com>
+Description: The hayashir data package contains all datasets used in the book "Econometrics" by Fumio Hayashi. Documentation and variable descriptions for each data set are also included. Vignettes provide R code that reproduces the output in the "Application" sections of each chapter.
+Depends: R (>= 3.4.3)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+BugReports: https://github.com/lachlandeer/hayashir/issues
+RoxygenNote: 6.0.1
+Suggests: testthat,
+    knitr,
+    rmarkdown
+URL: http://lachlandeer.github.io/hayashir, https://github.com/lachlandeer/hayashir
+VignetteBuilder: knitr
+Imports: car
