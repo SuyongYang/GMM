@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Lachlan Deer" />
+
+<meta name="date" content="2024-09-05" />
+
+<title>Chapter 01: Finite Sample Properties of OLS</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Chapter 01: Finite Sample Properties of
+OLS</h1>
+<h4 class="author">Lachlan Deer</h4>
+<h4 class="date">2024-09-05</h4>
+
+
+
+<div id="application-returns-to-scale-in-electricity-supply" class="section level1">
+<h1>Application: Returns to Scale in Electricity Supply</h1>
+<p>Load the <code>hayashir</code> package</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(hayashir)</span></code></pre></div>
+<div id="the-data" class="section level2">
+<h2>The Data</h2>
+<p>Let’s get a quick look at our data by looking at the first 10
+rows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">head</span>(nerlove, <span class="dv">10</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt;    total_cost output price_labor price_fuel price_capital</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; 1       0.082      2        2.09       17.9           183</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; 2       0.661      3        2.05       35.1           174</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 3       0.990      4        2.05       35.1           171</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 4       0.315      4        1.83       32.2           166</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 5       0.197      5        2.12       28.6           233</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 6       0.098      9        2.12       28.6           195</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 7       0.949     11        1.98       35.5           206</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 8       0.675     13        2.05       35.1           150</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 9       0.525     13        2.19       29.1           155</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 10      0.501     22        1.72       15.0           188</span></span></code></pre></div>
+<p>Some information about the variables in the data can be found in the
+documentation:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>?nerlove</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; httpd 도움말 서버를 시작합니다 ... 완료</span></span></code></pre></div>
+<p>And we can gain an understanding of the structure of our data by:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">str</span>(nerlove)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    145 obs. of  5 variables:</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;  $ total_cost   : num  0.082 0.661 0.99 0.315 0.197 0.098 0.949 0.675 0.525 0.501 ...</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;  $ output       : num  2 3 4 4 5 9 11 13 13 22 ...</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;  $ price_labor  : num  2.09 2.05 2.05 1.83 2.12 2.12 1.98 2.05 2.19 1.72 ...</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;  $ price_fuel   : num  17.9 35.1 35.1 32.2 28.6 28.6 35.5 35.1 29.1 15 ...</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;  $ price_capital: num  183 174 171 166 233 195 206 150 155 188 ...</span></span></code></pre></div>
+<p>And by using the <code>skim</code> command from the
+<code>skimr</code> package we can look at summary statistics:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># install.packages(&quot;skimr&quot;)</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; Warning: 패키지 &#39;skimr&#39;는 R 버전 4.3.3에서 작성되었습니다</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="fu">skim</span>(nerlove)</span></code></pre></div>
+<table>
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">nerlove</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">145</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">5</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="10%" />
+<col width="14%" />
+<col width="8%" />
+<col width="8%" />
+<col width="7%" />
+<col width="7%" />
+<col width="8%" />
+<col width="8%" />
+<col width="9%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">total_cost</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">12.98</td>
+<td align="right">19.79</td>
+<td align="right">0.08</td>
+<td align="right">2.38</td>
+<td align="right">6.75</td>
+<td align="right">14.13</td>
+<td align="right">139.42</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">output</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2133.08</td>
+<td align="right">2931.94</td>
+<td align="right">2.00</td>
+<td align="right">279.00</td>
+<td align="right">1109.00</td>
+<td align="right">2507.00</td>
+<td align="right">16719.00</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">price_labor</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1.97</td>
+<td align="right">0.24</td>
+<td align="right">1.45</td>
+<td align="right">1.76</td>
+<td align="right">2.04</td>
+<td align="right">2.19</td>
+<td align="right">2.32</td>
+<td align="left">▂▆▃▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">price_fuel</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">26.18</td>
+<td align="right">7.88</td>
+<td align="right">10.30</td>
+<td align="right">21.30</td>
+<td align="right">26.90</td>
+<td align="right">32.20</td>
+<td align="right">42.80</td>
+<td align="left">▂▅▇▆▁</td>
+</tr>
+<tr class="odd">
+<td align="left">price_capital</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">174.50</td>
+<td align="right">18.21</td>
+<td align="right">138.00</td>
+<td align="right">162.00</td>
+<td align="right">170.00</td>
+<td align="right">183.00</td>
+<td align="right">233.00</td>
+<td align="left">▂▇▃▂▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="testing-homogeneity-of-the-cost-function" class="section level2">
+<h2>Testing Homogeneity of the cost function</h2>
+<div id="the-unrestricted-model" class="section level3">
+<h3>The Unrestricted Model</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>unrestricted_ls <span class="ot">&lt;-</span> <span class="fu">log</span>(total_cost) <span class="sc">~</span> <span class="fu">log</span>(output) <span class="sc">+</span> </span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                    <span class="fu">log</span>(price_labor) <span class="sc">+</span> <span class="fu">log</span>(price_capital) <span class="sc">+</span> <span class="fu">log</span>(price_fuel)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(unrestricted_ls, <span class="at">data =</span> nerlove)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">summary</span>(model1)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; lm(formula = unrestricted_ls, data = nerlove)</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; -0.97784 -0.23817 -0.01372  0.16031  1.81751 </span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;                    Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; (Intercept)        -3.52650    1.77437  -1.987   0.0488 *  </span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; log(output)         0.72039    0.01747  41.244  &lt; 2e-16 ***</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; log(price_labor)    0.43634    0.29105   1.499   0.1361    </span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; log(price_capital) -0.21989    0.33943  -0.648   0.5182    </span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; log(price_fuel)     0.42652    0.10037   4.249 3.89e-05 ***</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.3924 on 140 degrees of freedom</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.926,  Adjusted R-squared:  0.9238 </span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; F-statistic: 437.7 on 4 and 140 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<p>Scale Coefficient:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>return_to_scale <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> model1<span class="sc">$</span>coefficients[<span class="dv">2</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">print</span>(return_to_scale)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; log(output) </span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;    1.388129</span></span></code></pre></div>
+<p>t-stat: The <code>car</code> package provides the
+<code>linearHypothesis</code> package which provides an easy way to test
+linear hypotheses:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; 필요한 패키지를 로딩중입니다: carData</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model1, <span class="fu">c</span>(<span class="st">&quot;log(price_capital) = 0&quot;</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; Linear hypothesis test</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; Hypothesis:</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; log(price_capital) = 0</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; Model 1: restricted model</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; Model 2: log(total_cost) ~ log(output) + log(price_labor) + log(price_capital) + </span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt;     log(price_fuel)</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt;   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; 1    141 21.617                           </span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; 2    140 21.552  1  0.064605 0.4197 0.5182</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co"># relationship between t and F = F = t^2</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>test_results <span class="ot">&lt;-</span> <span class="fu">linearHypothesis</span>(model1, <span class="fu">c</span>(<span class="st">&quot;log(price_capital) = 0&quot;</span>))</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co"># ie. same as above</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>t_stat <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(test_results<span class="sc">$</span>F)</span></code></pre></div>
+</div>
+<div id="the-restricted-model" class="section level3">
+<h3>The Restricted Model</h3>
+<p>Following the book:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>restricted_ls <span class="ot">&lt;-</span> <span class="fu">log</span>(total_cost<span class="sc">/</span>price_fuel) <span class="sc">~</span> <span class="fu">log</span>(output) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>                        <span class="fu">log</span>(price_labor<span class="sc">/</span>price_fuel) <span class="sc">+</span> <span class="fu">log</span>(price_capital <span class="sc">/</span> price_fuel) </span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(restricted_ls, <span class="at">data =</span> nerlove)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="fu">summary</span>(model2)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; lm(formula = restricted_ls, data = nerlove)</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; -1.01200 -0.21759 -0.00752  0.16048  1.81922 </span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt;                                Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; (Intercept)                   -4.690789   0.884871  -5.301 4.34e-07 ***</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; log(output)                    0.720688   0.017436  41.334  &lt; 2e-16 ***</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; log(price_labor/price_fuel)    0.592910   0.204572   2.898  0.00435 ** </span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt; log(price_capital/price_fuel) -0.007381   0.190736  -0.039  0.96919    </span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.3918 on 141 degrees of freedom</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.9316, Adjusted R-squared:  0.9301 </span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="co">#&gt; F-statistic:   640 on 3 and 141 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+<p>Next, Hayashi provides a routine to compute the F-stat to test the
+restriction. First, we proceed as he instructs:</p>
+<p>We can find SSR from the <code>anova function:</code></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">anova</span>(model1)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; Analysis of Variance Table</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; Response: log(total_cost)</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt;                     Df  Sum Sq Mean Sq   F value    Pr(&gt;F)    </span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; log(output)          1 264.995 264.995 1721.3849 &lt; 2.2e-16 ***</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; log(price_labor)     1   1.735   1.735   11.2688  0.001015 ** </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; log(price_capital)   1   0.005   0.005    0.0333  0.855374    </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; log(price_fuel)      1   2.780   2.780   18.0581 3.889e-05 ***</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; Residuals          140  21.552   0.154                        </span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span></code></pre></div>
+<p>We need to get SSR_u from model 1 and the denominator df. The
+<code>anova()</code> function returns a <code>data.frame</code> from
+which we need to extract:</p>
+<ol style="list-style-type: decimal">
+<li>the SSR - located in the last row of the <code>Sum_Sq</code>
+column</li>
+<li>The degress of freedom - located in the last row of the
+<code>Df</code> column</li>
+</ol>
+<p>To get them:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>anova_model1 <span class="ot">&lt;-</span> <span class="fu">anova</span>(model1)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>final_row_u <span class="ot">&lt;-</span> <span class="fu">nrow</span>(<span class="fu">nrow</span>(anova_model1))</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>SSR_u <span class="ot">&lt;-</span> anova_model1<span class="sc">$</span><span class="st">`</span><span class="at">Sum Sq</span><span class="st">`</span>[final_row_u]</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>df_resid_u <span class="ot">&lt;-</span> anova_model1<span class="sc">$</span>Df[final_row_u]</span></code></pre></div>
+<p>and doing the same for the for the restricted model:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>anova_model2 <span class="ot">&lt;-</span> <span class="fu">anova</span>(model2)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>final_row_r <span class="ot">&lt;-</span> <span class="fu">nrow</span>(<span class="fu">nrow</span>(anova_model2))</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>SSR_r <span class="ot">&lt;-</span> anova_model2<span class="sc">$</span><span class="st">`</span><span class="at">Sum Sq</span><span class="st">`</span>[final_row_r]</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>df_resid_r <span class="ot">&lt;-</span> anova_model2<span class="sc">$</span>Df[final_row_r]</span></code></pre></div>
+<p>Then our F-stat can be computed as:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>f_stat <span class="ot">&lt;-</span> ( (SSR_r <span class="sc">-</span> SSR_u) <span class="sc">/</span> (df_resid_r <span class="sc">-</span> df_resid_u)) <span class="sc">/</span> (SSR_u <span class="sc">/</span> (df_resid_u))</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;F stat is:&quot;</span>, f_stat))</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;F stat is: &quot;</span></span></code></pre></div>
+<p>Which has a p-value of</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">pf</span>(f_stat, df_resid_r <span class="sc">-</span> df_resid_u, df_resid_u, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co">#&gt; numeric(0)</span></span></code></pre></div>
+<p>Alternatively, we can look at the F-stat versus a critical value.#
+The critical value at 5% is</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">qf</span>(<span class="fl">0.05</span>, df_resid_r <span class="sc">-</span> df_resid_u, df_resid_u, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#&gt; numeric(0)</span></span></code></pre></div>
+</div>
+</div>
+<div id="testing-restrictions-in-an-easier-way" class="section level2">
+<h2>Testing Restrictions in an Easier way</h2>
+<p>Though instructive, that was kind of <em>complicated</em> … a simpler
+version would be using the <code>linearHypothesis</code> function that
+we have already seen. We specifying the restriction we want to
+impose:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model1, <span class="st">&quot;log(price_labor) + log(price_capital) + log(price_fuel) = 1&quot;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co">#&gt; Linear hypothesis test</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="co">#&gt; Hypothesis:</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="co">#&gt; log(price_labor)  + log(price_capital)  + log(price_fuel) = 1</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="co">#&gt; Model 1: restricted model</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="co">#&gt; Model 2: log(total_cost) ~ log(output) + log(price_labor) + log(price_capital) + </span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="co">#&gt;     log(price_fuel)</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="co">#&gt;   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)</span></span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a><span class="co">#&gt; 1    141 21.640                           </span></span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a><span class="co">#&gt; 2    140 21.552  1  0.088311 0.5737 0.4501</span></span></code></pre></div>
+</div>
+<div id="detour-a-cautionary-note-on-r2" class="section level2">
+<h2>Detour: a cautionary note on <span class="math inline">\(R^2\)</span></h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>scale_effect <span class="ot">&lt;-</span> <span class="fu">log</span>(total_cost <span class="sc">/</span> output) <span class="sc">~</span> <span class="fu">log</span>(output ) <span class="sc">+</span> </span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>                    <span class="fu">log</span>(price_labor ) <span class="sc">+</span> <span class="fu">log</span>(price_capital ) <span class="sc">+</span> <span class="fu">log</span>(price_fuel)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(scale_effect, <span class="at">data =</span> nerlove)</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="fu">summary</span>(model3)</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="co">#&gt; lm(formula = scale_effect, data = nerlove)</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="co">#&gt; -0.97784 -0.23817 -0.01372  0.16031  1.81751 </span></span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a><span class="co">#&gt;                    Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a><span class="co">#&gt; (Intercept)        -3.52650    1.77437  -1.987   0.0488 *  </span></span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a><span class="co">#&gt; log(output)        -0.27961    0.01747 -16.008  &lt; 2e-16 ***</span></span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a><span class="co">#&gt; log(price_labor)    0.43634    0.29105   1.499   0.1361    </span></span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a><span class="co">#&gt; log(price_capital) -0.21989    0.33943  -0.648   0.5182    </span></span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a><span class="co">#&gt; log(price_fuel)     0.42652    0.10037   4.249 3.89e-05 ***</span></span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.3924 on 140 degrees of freedom</span></span>
+<span id="cb17-25"><a href="#cb17-25" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.6948, Adjusted R-squared:  0.6861 </span></span>
+<span id="cb17-26"><a href="#cb17-26" tabindex="-1"></a><span class="co">#&gt; F-statistic: 79.69 on 4 and 140 DF,  p-value: &lt; 2.2e-16</span></span></code></pre></div>
+</div>
+<div id="testing-constant-returns-to-scale" class="section level2">
+<h2>Testing Constant Returns to Scale</h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">linearHypothesis</span>(model2, <span class="st">&quot;log(output) = 1&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="co">#&gt; Linear hypothesis test</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="co">#&gt; Hypothesis:</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="co">#&gt; log(output) = 1</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="co">#&gt; Model 1: restricted model</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="co">#&gt; Model 2: log(total_cost/price_fuel) ~ log(output) + log(price_labor/price_fuel) + </span></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="co">#&gt;     log(price_capital/price_fuel)</span></span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a><span class="co">#&gt;   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    </span></span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a><span class="co">#&gt; 1    142 61.027                                  </span></span>
+<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a><span class="co">#&gt; 2    141 21.640  1    39.386 256.63 &lt; 2.2e-16 ***</span></span>
+<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span></code></pre></div>
+<p>Which again returns an F-stat. We can map that into a t-stat as
+follows:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>f_stat2 <span class="ot">&lt;-</span> <span class="fu">linearHypothesis</span>(model2, <span class="st">&quot;log(output) = 1&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>t_stat2 <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(f_stat2<span class="sc">$</span>F[<span class="dv">2</span>])</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;t stat is:&quot;</span>, t_stat2))</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;t stat is: 16.0195576357842&quot;</span></span></code></pre></div>
+</div>
+<div id="importance-of-plotting-residuals" class="section level2">
+<h2>Importance of plotting residuals</h2>
+<p>The <code>car</code> package again helps us. <code>car</code> comes
+with a function <code>residualPlot</code> which will plot residuals
+against fitted values (by default), or against a specified variable, in
+our case <code>log(output)</code></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="co"># residual plot comes from car package</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">residualPlot</span>(model2, <span class="at">variable =</span> <span class="st">&quot;log(output)&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

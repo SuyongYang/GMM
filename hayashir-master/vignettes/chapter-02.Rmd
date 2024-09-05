@@ -89,11 +89,10 @@ The relevant Date range is January 1953 to July 1971.
 ```{r}
 fama <- mishkin2 %>%
             filter(between(as.yearmon(time_period), 
-                           as.yearmon("Jan 1953"), 
-                           as.yearmon("Jul 1971")
+                           as.yearmon("1 1953"), 
+                           as.yearmon("7 1971")
                            )
                    )
-
 ```
 
 ```{r}
