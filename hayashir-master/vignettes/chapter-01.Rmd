@@ -84,6 +84,9 @@ test_results <- linearHypothesis(model1, c("log(price_capital) = 0"))
 # ie. same as above
 t_stat <- sqrt(test_results$F)
 
+# pvalue of t
+1-pt(0.6478191,1) 
+
 ```
 
 ### The Restricted Model
